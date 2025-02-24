@@ -18,7 +18,7 @@ class Absensi extends Model
         'tanggal' => 'date',
         'check_in' => 'datetime',
         'check_out' => 'datetime',
-        'neatness_score' => 'float'
+        'nilai_kerapian' => 'float'
     ];
 
     public function user()

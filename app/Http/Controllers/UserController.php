@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class UserController extends Controller
 {
@@ -76,5 +77,20 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
+    }
+
+    public function downloadQrCode(string $id)
+    {
+        return response()->streamDownload(
+            function () use ($id) {
+                echo QrCode::size(200)
+                    ->format('png')
+                    ->generate($id);
+            },
+            'qr-code.png',
+            [
+                'Content-Type' => 'image/png',
+            ]
+        );
     }
 }

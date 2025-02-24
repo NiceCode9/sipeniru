@@ -21,7 +21,11 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::resource('users', UserController::class);
+    Route::get('/users/{id}/qr-code', [UserController::class, 'downloadQrCode'])->name('users.qr-code');
 
-    Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+    Route::get('/scan', [AbsensiController::class, 'index'])->name('absensi.scan.index');
     Route::post('/absensi/scan', [AbsensiController::class, 'scan'])->name('absensi.scan');
+
+    Route::get('/absensi', [AbsensiController::class, 'absensiList'])->name('absensi.index');
+    Route::post('/inputKerapian', [AbsensiController::class, 'inputKerapian'])->name('absensi.inputKerapian');
 });

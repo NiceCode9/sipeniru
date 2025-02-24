@@ -14,7 +14,7 @@ class AbsensiController extends Controller
 
     public function index()
     {
-        return view('admin.absensi');
+        return view('admin.scan');
     }
 
     public function scan(Request $request)
@@ -43,8 +43,9 @@ class AbsensiController extends Controller
                 if ($timeSinceCheckIn < self::MIN_HOURS_BETWEEN_CHECKIN_CHECKOUT) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Anda belum bisa melakukan check-out. Minimal waktu kerja adalah ' .
-                            self::MIN_HOURS_BETWEEN_CHECKIN_CHECKOUT . ' jam.'
+                        // 'message' => 'Anda belum bisa melakukan check-out. Minimal waktu kerja adalah ' .
+                        //     self::MIN_HOURS_BETWEEN_CHECKIN_CHECKOUT . ' jam.'
+                        'message' => $timeSinceCheckIn
                     ], 400);
                 }
 
@@ -83,5 +84,24 @@ class AbsensiController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function absensilist()
+    {
+        $data = Absensi::with('user')->where('check_out', null)->orWhere('nilai_kerapian', null)->get();
+        return view('admin.absensi_list', compact('data'));
+    }
+
+    public function inputKerapian(Request $request)
+    {
+        $absensi = Absensi::where('user_id', $request->user_id)
+            // ->where('date', $request->date)
+            ->firstOrFail();
+
+        $absensi->update([
+            'nilai_kerapian' => $request->nilai_kerapian
+        ]);
+
+        return response()->json(['message' => 'Nilai kerapian berhasil disimpan']);
     }
 }

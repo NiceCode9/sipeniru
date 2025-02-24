@@ -31,7 +31,11 @@
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->nip }}</td>
                                             <td>{{ ucfirst($user->role) }}</td>
-                                            <td>{!! $user->generateQrCode() !!}</td>
+                                            <td>
+                                                <a href="{{ route('users.qr-code', $user->id) }}"
+                                                    class="btn btn-info btn-sm" title="Download Qrcode">Unduh
+                                                    QrCode</a>
+                                            </td>
                                             <td>
                                                 <a href="{{ route('users.edit', $user->id) }}"
                                                     class="btn btn-sm btn-warning">Edit</a>

@@ -72,6 +72,24 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
+                        <li class="nav-item {{ request()->is('users.*') ? 'active' : '' }}">
+                            <a href="{{ route('users.index') }}">
+                                <i class="fas fa-users"></i>
+                                <p>Guru</p>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ request()->is('absensi.scan.*') ? 'active' : '' }}">
+                            <a href="{{ route('absensi.scan.index') }}">
+                                <i class="fas fa-clock"></i>
+                                <p>Scan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ request()->is('absensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('absensi.index') }}">
+                                <i class="fas fa-clock"></i>
+                                <p>Absensi List</p>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
