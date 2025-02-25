@@ -10,17 +10,18 @@ class Evaluasi extends Model
         'user_id',
         'start_date',
         'end_date',
-        'attendance_percentage',
-        'neatness_score',
-        'final_score'
+        'presentasi_absensi',
+        'score_kerapian',
+        'score_akhir',
+        'predikat',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
-        'attendance_percentage' => 'float',
-        'neatness_score' => 'float',
-        'final_score' => 'float'
+        'presentasi_absensi' => 'float',
+        'score_kerapian' => 'float',
+        'score_akhir' => 'float'
     ];
 
     public function user()

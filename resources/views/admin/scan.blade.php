@@ -39,6 +39,7 @@
     <script>
         $(document).ready(function() {
             let html5QrCode = null;
+            let isProcessing = false; // Flag untuk mengontrol proses scanning
 
             // Get available cameras
             Html5Qrcode.getCameras().then(devices => {
@@ -114,6 +115,12 @@
             });
 
             function onScanSuccess(qrData) {
+                // Jika sedang memproses scan sebelumnya, abaikan scan baru
+                if (isProcessing) return;
+
+                // Set flag processing menjadi true
+                isProcessing = true;
+
                 $.ajax({
                     url: '{{ route('absensi.scan') }}',
                     type: 'POST',
@@ -145,6 +152,11 @@
                             .addClass('alert-success')
                             .find('.alert-heading')
                             .text(response.message);
+
+                        // Setelah 2 detik, izinkan scan berikutnya
+                        setTimeout(() => {
+                            isProcessing = false;
+                        }, 2000);
                     },
                     error: function(xhr) {
                         const response = xhr.responseJSON || {};
@@ -154,6 +166,11 @@
                             .find('.alert-heading')
                             .text(response.message || 'Terjadi kesalahan saat memproses QR code');
                         $('#user-details, #attendance-details').empty();
+
+                        // Setelah 2 detik, izinkan scan berikutnya
+                        setTimeout(() => {
+                            isProcessing = false;
+                        }, 2000);
                     }
                 });
             }

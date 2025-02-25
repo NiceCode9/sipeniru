@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('evaluasis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->date('s_date');
-            $table->date('e_date');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->float('presentasi_absensi');
             $table->float('score_kerapian');
             $table->float('score_akhir');
+            $table->string('predikat');
             $table->timestamps();
         });
     }

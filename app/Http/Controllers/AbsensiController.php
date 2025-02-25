@@ -38,14 +38,13 @@ class AbsensiController extends Controller
                 $status = 'check-in';
             } else if ($absensi->check_out == null) {
                 // Validasi minimum waktu antara check-in dan check-out
-                $timeSinceCheckIn = $currentTime->diffInHours($absensi->check_in);
+                $timeSinceCheckIn = $currentTime->diffInHours($absensi->check_in, true);
 
                 if ($timeSinceCheckIn < self::MIN_HOURS_BETWEEN_CHECKIN_CHECKOUT) {
                     return response()->json([
                         'success' => false,
-                        // 'message' => 'Anda belum bisa melakukan check-out. Minimal waktu kerja adalah ' .
-                        //     self::MIN_HOURS_BETWEEN_CHECKIN_CHECKOUT . ' jam.'
-                        'message' => $timeSinceCheckIn
+                        'message' => 'Anda belum bisa melakukan check-out. Minimal waktu kerja adalah ' .
+                            self::MIN_HOURS_BETWEEN_CHECKIN_CHECKOUT . ' jam.'
                     ], 400);
                 }
 
@@ -86,10 +85,33 @@ class AbsensiController extends Controller
         }
     }
 
-    public function absensilist()
+    public function absensiList(Request $request)
     {
-        $data = Absensi::with('user')->where('check_out', null)->orWhere('nilai_kerapian', null)->get();
-        return view('admin.absensi_list', compact('data'));
+        $query = Absensi::with('user');
+
+        // Filter berdasarkan guru
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        // Filter berdasarkan rentang tanggal
+        if ($request->filled('filter_start_date') && $request->filled('filter_end_date')) {
+            $query->whereBetween('tanggal', [
+                $request->filter_start_date,
+                $request->filter_end_date
+            ]);
+        }
+
+        $data = $query->orderByRaw('CASE
+            WHEN check_out IS NULL THEN 1
+            WHEN nilai_kerapian IS NULL THEN 2
+            ELSE 3 END')
+            ->orderBy('tanggal', 'desc')
+            ->paginate(10);
+
+        $users = User::where('role', 'guru')->get();
+
+        return view('admin.absensi_list', compact('data', 'users'));
     }
 
     public function inputKerapian(Request $request)

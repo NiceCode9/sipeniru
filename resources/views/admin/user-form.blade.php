@@ -9,7 +9,8 @@
                 <div class="card">
                     <div class="card-header">{{ isset($user) ? 'Edit User' : 'Tambah User' }}</div>
                     <div class="card-body">
-                        <form action="{{ isset($user) ? route('users.update', $user->id) : route('users.store') }}"
+                        <form
+                            action="{{ isset($user) ? route('admin.users.update', $user->id) : route('admin.users.store') }}"
                             method="POST">
                             @csrf
                             @if (isset($user))
@@ -66,7 +67,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary">Simpan</button>
-                            <a href="{{ route('users.index') }}" class="btn btn-secondary">Kembali</a>
+                            <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Kembali</a>
                         </form>
                     </div>
                 </div>

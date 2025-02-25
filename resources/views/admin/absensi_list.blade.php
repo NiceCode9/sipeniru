@@ -8,6 +8,50 @@
                     <h4>Daftar Absensi</h4>
                 </div>
                 <div class="card-body">
+                    <!-- Form Filter -->
+                    <form action="{{ route('admin.absensi.index') }}" method="GET" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Guru</label>
+                                    <select name="user_id" class="form-control">
+                                        <option value="">Semua Guru</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}"
+                                                {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                                                {{ $user->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Tanggal Mulai</label>
+                                    <input type="date" name="filter_start_date" class="form-control"
+                                        value="{{ request('filter_start_date') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Tanggal Akhir</label>
+                                    <input type="date" name="filter_end_date" class="form-control"
+                                        value="{{ request('filter_end_date') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                        <a href="{{ route('admin.absensi.index') }}" class="btn btn-secondary">Reset</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Table -->
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -50,6 +94,11 @@
                                 @endforeach
                             </tbody>
                         </table>
+
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $data->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,7 +110,7 @@
     <script>
         function inputNeatness(attendanceId, userId) {
             const nilai = prompt('Masukkan nilai kerapian (0-10):');
-            let url = "{{ route('absensi.inputKerapian') }}";
+            let url = "{{ route('admin.absensi.inputKerapian') }}";
             if (nilai !== null) {
                 if (nilai <= 10) {
                     $.ajax({

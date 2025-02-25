@@ -65,32 +65,69 @@
             </div>
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
-                    <ul class="nav nav-secondary">
-                        <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
-                            <a href="{{ route('dashboard') }}">
-                                <i class="fas fa-home"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-item {{ request()->is('users.*') ? 'active' : '' }}">
-                            <a href="{{ route('users.index') }}">
-                                <i class="fas fa-users"></i>
-                                <p>Guru</p>
-                            </a>
-                        </li>
-                        <li class="nav-item {{ request()->is('absensi.scan.*') ? 'active' : '' }}">
-                            <a href="{{ route('absensi.scan.index') }}">
-                                <i class="fas fa-clock"></i>
-                                <p>Scan</p>
-                            </a>
-                        </li>
-                        <li class="nav-item {{ request()->is('absensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('absensi.index') }}">
-                                <i class="fas fa-clock"></i>
-                                <p>Absensi List</p>
-                            </a>
-                        </li>
-                    </ul>
+                    @if (auth()->user()->role == 'admin')
+                        <ul class="nav nav-secondary">
+                            <li class="nav-item {{ request()->is('admin.dashboard') ? 'active' : '' }}">
+                                <a href="{{ route('admin.dashboard') }}">
+                                    <i class="fas fa-home"></i>
+                                    <p>Dashboard</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('admin.users.*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.users.index') }}">
+                                    <i class="fas fa-users"></i>
+                                    <p>Guru</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('absensi.scan.*') ? 'active' : '' }}">
+                                <a href="{{ route('absensi.scan.index') }}">
+                                    <i class="fas fa-clock"></i>
+                                    <p>Scan</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('admin.absensi.*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.absensi.index') }}">
+                                    <i class="fas fa-clock"></i>
+                                    <p>Absensi List</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('admin.evaluasi.*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.evaluasi.index') }}">
+                                    <i class="fas fa-calculator"></i>
+                                    <p>Evaluasi Guru</p>
+                                </a>
+                            </li>
+                        </ul>
+                    @endif
+
+                    @if (auth()->user()->role == 'guru')
+                        <ul class="nav nav-secondary">
+                            <li class="nav-item {{ request()->is('guru.dashboard') ? 'active' : '' }}">
+                                <a href="{{ route('guru.dashboard') }}">
+                                    <i class="fas fa-home"></i>
+                                    <p>Dashboard</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('guru.profile') ? 'active' : '' }}">
+                                <a href="{{ route('guru.profile') }}">
+                                    <i class="fas fa-user"></i>
+                                    <p>Profil</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('guru.absensi') ? 'active' : '' }}">
+                                <a href="{{ route('guru.absensi') }}">
+                                    <i class="fas fa-clock"></i>
+                                    <p>Absensi</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('guru.evaluasi') ? 'active' : '' }}">
+                                <a href="{{ route('guru.evaluasi') }}">
+                                    <i class="fas fa-call"></i>
+                                    <p>Evaluasi</p>
+                                </a>
+                            </li>
+                        </ul>
+                    @endif
                 </div>
             </div>
         </div>
@@ -159,7 +196,8 @@
                                                 <div class="u-text">
                                                     <h4>Hizrian</h4>
                                                     <p class="text-muted">hello@example.com</p>
-                                                    <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View
+                                                    <a href="profile.html"
+                                                        class="btn btn-xs btn-secondary btn-sm">View
                                                         Profile</a>
                                                 </div>
                                             </div>
@@ -167,8 +205,8 @@
                                         <li>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">My Profile</a>
-                                            <form action="{{ route('logout') }}" style="display: none;" method="POST"
-                                                id="logout-form">
+                                            <form action="{{ route('logout') }}" style="display: none;"
+                                                method="POST" id="logout-form">
                                                 @csrf
                                             </form>
                                             <a class="dropdown-item" href="{{ route('logout') }}"

@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Data User</h5>
-                        <a href="{{ route('users.create') }}" class="btn btn-primary">Tambah User</a>
+                        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Tambah User</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -32,14 +32,14 @@
                                             <td>{{ $user->nip }}</td>
                                             <td>{{ ucfirst($user->role) }}</td>
                                             <td>
-                                                <a href="{{ route('users.qr-code', $user->id) }}"
+                                                <a href="{{ route('admin.users.qr-code', $user->id) }}"
                                                     class="btn btn-info btn-sm" title="Download Qrcode">Unduh
                                                     QrCode</a>
                                             </td>
                                             <td>
-                                                <a href="{{ route('users.edit', $user->id) }}"
+                                                <a href="{{ route('admin.users.edit', $user->id) }}"
                                                     class="btn btn-sm btn-warning">Edit</a>
-                                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
                                                     class="d-inline">
                                                     @csrf
                                                     @method('DELETE')
