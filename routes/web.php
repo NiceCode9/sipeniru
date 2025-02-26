@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile', [GuruProfileController::class, 'index'])->name('profile');
         Route::get('/absensi', [GuruAbsensiController::class, 'index'])->name('absensi');
         Route::get('/evaluasi', [GuruEvaluasiController::class, 'index'])->name('evaluasi');
+        Route::get('/users/{id}/qr-code', [UserController::class, 'downloadQrCode'])->name('users.qr-code');
     });
 
     // Route umum
