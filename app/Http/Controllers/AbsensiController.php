@@ -107,23 +107,75 @@ class AbsensiController extends Controller
             WHEN nilai_kerapian IS NULL THEN 2
             ELSE 3 END')
             ->orderBy('tanggal', 'desc')
-            ->paginate(10);
+            ->paginate(10)->withQueryString();
 
         $users = User::where('role', 'guru')->get();
 
         return view('admin.absensi_list', compact('data', 'users'));
     }
 
+    // public function inputKerapian(Request $request)
+    // {
+    //     $absensi = Absensi::where('user_id', $request->user_id)
+    //         // ->where('date', $request->date)
+    //         ->firstOrFail();
+
+    //     $absensi->update([
+    //         'nilai_kerapian' => $request->nilai_kerapian
+    //     ]);
+
+    //     return response()->json(['message' => 'Nilai kerapian berhasil disimpan']);
+    // }
     public function inputKerapian(Request $request)
     {
         $absensi = Absensi::where('user_id', $request->user_id)
-            // ->where('date', $request->date)
+            ->where('id', $request->absensi_id)
             ->firstOrFail();
 
         $absensi->update([
-            'nilai_kerapian' => $request->nilai_kerapian
+            'kerapian_seragam' => $request->kerapian_seragam,
+            'kelengkapan_atribut' => $request->kelengkapan_atribut,
+            'nilai_kerapian' => $this->hitungNilaiKerapian($request->kerapian_seragam, $request->kelengkapan_atribut)
         ]);
 
-        return response()->json(['message' => 'Nilai kerapian berhasil disimpan']);
+        return response()->json(['message' => 'Nilai kerapian berhasil disimpan', 'nilai_kerapian' => $absensi->nilai_kerapian]);
+    }
+
+    private function hitungNilaiKerapian($kerapianSeragam, $kelengkapanAtribut)
+    {
+        // Konversi nilai string ke numerik
+        $nilaiKerapianSeragam = $this->konversiKerapianSeragam($kerapianSeragam);
+        $nilaiKelengkapanAtribut = $this->konversiKelengkapanAtribut($kelengkapanAtribut);
+
+        // Rata-rata kedua nilai (bisa disesuaikan dengan pembobotan jika perlu)
+        return ($nilaiKerapianSeragam + $nilaiKelengkapanAtribut) / 2;
+    }
+
+    private function konversiKerapianSeragam($nilai)
+    {
+        switch ($nilai) {
+            case 'Disiplin':
+                return 10;
+            case 'Kurang Disiplin':
+                return 6;
+            case 'Tidak Disiplin':
+                return 3;
+            default:
+                return 0;
+        }
+    }
+
+    private function konversiKelengkapanAtribut($nilai)
+    {
+        switch ($nilai) {
+            case 'Lengkap':
+                return 10;
+            case 'Kurang Lengkap':
+                return 6;
+            case 'Tidak Lengkap':
+                return 3;
+            default:
+                return 0;
+        }
     }
 }

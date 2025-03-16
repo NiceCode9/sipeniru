@@ -1,0 +1,141 @@
+<?php
+
+namespace App\Services;
+
+class FuzzyEvaluationService
+{
+    // Fungsi untuk absensi tidak berubah
+    private function absensi($persentase)
+    {
+        if ($persentase >= 90) {
+            return ['BAIK' => 1, 'CUKUP' => 0, 'KURANG' => 0];
+        } elseif ($persentase >= 70) {
+            return [
+                'BAIK' => ($persentase - 70) / 20,
+                'CUKUP' => (90 - $persentase) / 20,
+                'KURANG' => 0
+            ];
+        } elseif ($persentase >= 50) {
+            return [
+                'BAIK' => 0,
+                'CUKUP' => ($persentase - 50) / 20,
+                'KURANG' => (70 - $persentase) / 20
+            ];
+        } else {
+            return ['BAIK' => 0, 'CUKUP' => 0, 'KURANG' => 1];
+        }
+    }
+
+    // Konversi kategori kerapian seragam ke nilai numerik
+    public function konversiKerapianSeragam($kategori)
+    {
+        switch ($kategori) {
+            case 'Disiplin':
+                return 10;
+            case 'Kurang Disiplin':
+                return 6;
+            case 'Tidak Disiplin':
+                return 2;
+            default:
+                return 0;
+        }
+    }
+
+    // Konversi kategori kelengkapan atribut ke nilai numerik
+    public function konversiKelengkapanAtribut($kategori)
+    {
+        switch ($kategori) {
+            case 'Lengkap':
+                return 10;
+            case 'Kurang Lengkap':
+                return 6;
+            case 'Tidak Lengkap':
+                return 2;
+            default:
+                return 0;
+        }
+    }
+
+    // Hitung skor kerapian gabungan
+    public function hitungSkorKerapian($kerapianSeragam, $kelengkapanAtribut)
+    {
+        $nilaiKerapianSeragam = $this->konversiKerapianSeragam($kerapianSeragam);
+        $nilaiKelengkapanAtribut = $this->konversiKelengkapanAtribut($kelengkapanAtribut);
+
+        // Bobot 50:50 untuk kedua indikator
+        return ($nilaiKerapianSeragam + $nilaiKelengkapanAtribut) / 2;
+    }
+
+    // Fungsi kerapian yang sudah ada, tetap digunakan untuk nilai gabungan
+    private function kerapian($skor)
+    {
+        if ($skor >= 8) {
+            return ['RAPI' => 1, 'SEDANG' => 0, 'TIDAK_RAPI' => 0];
+        } elseif ($skor >= 6) {
+            return [
+                'RAPI' => ($skor - 6) / 2,
+                'SEDANG' => (8 - $skor) / 2,
+                'TIDAK_RAPI' => 0
+            ];
+        } elseif ($skor >= 4) {
+            return [
+                'RAPI' => 0,
+                'SEDANG' => ($skor - 4) / 2,
+                'TIDAK_RAPI' => (6 - $skor) / 2
+            ];
+        } else {
+            return ['RAPI' => 0, 'SEDANG' => 0, 'TIDAK_RAPI' => 1];
+        }
+    }
+
+    // Aturan fuzzy tidak berubah
+    private $aturan = [
+        ['IF' => ['absensi' => 'BAIK', 'kerapian' => 'RAPI'], 'THEN' => 'SANGAT_BAIK'],
+        ['IF' => ['absensi' => 'BAIK', 'kerapian' => 'SEDANG'], 'THEN' => 'BAIK'],
+        ['IF' => ['absensi' => 'CUKUP', 'kerapian' => 'RAPI'], 'THEN' => 'BAIK'],
+        ['IF' => ['absensi' => 'CUKUP', 'kerapian' => 'SEDANG'], 'THEN' => 'CUKUP'],
+        ['IF' => ['absensi' => 'KURANG', 'kerapian' => 'TIDAK_RAPI'], 'THEN' => 'KURANG'],
+    ];
+
+    // Modifikasi fungsi evaluasi guru untuk menerima parameter baru
+    public function evaluasiGuru($persentaseAbsensi, $kerapianSeragam, $kelengkapanAtribut)
+    {
+        // Hitung skor kerapian gabungan
+        $skorKerapian = $this->hitungSkorKerapian($kerapianSeragam, $kelengkapanAtribut);
+
+        // Fuzzifikasi
+        $absensiFuzzy = $this->absensi($persentaseAbsensi);
+        $kerapianFuzzy = $this->kerapian($skorKerapian);
+
+        // Evaluasi aturan
+        $hasilEvaluasi = [];
+        foreach ($this->aturan as $aturan) {
+            $nilaiAbsensi = $absensiFuzzy[$aturan['IF']['absensi']] ?? 0;
+            $nilaiKerapian = $kerapianFuzzy[$aturan['IF']['kerapian']] ?? 0;
+
+            // Menggunakan MIN untuk operasi AND
+            $kekuatanAturan = min($nilaiAbsensi, $nilaiKerapian);
+            $hasilEvaluasi[$aturan['THEN']] = $kekuatanAturan;
+        }
+
+        // Defuzzifikasi menggunakan Center of Gravity
+        $pembilang = 0;
+        $penyebut = 0;
+        $rentangOutput = [
+            'SANGAT_BAIK' => 90,
+            'BAIK' => 75,
+            'CUKUP' => 60,
+            'KURANG' => 45
+        ];
+
+        foreach ($hasilEvaluasi as $kategori => $kekuatan) {
+            $pembilang += $kekuatan * $rentangOutput[$kategori];
+            $penyebut += $kekuatan;
+        }
+
+        return [
+            'score_kerapian' => $skorKerapian,
+            'score_akhir' => $penyebut > 0 ? $pembilang / $penyebut : 0
+        ];
+    }
+}

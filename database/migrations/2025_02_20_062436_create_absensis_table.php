@@ -17,6 +17,8 @@ return new class extends Migration
             $table->date('tanggal');
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
+            $table->string('kerapian_seragam')->nullable();
+            $table->string('kelengkapan_atribut')->nullable();
             $table->float('nilai_kerapian')->nullable();
             $table->timestamps();
         });

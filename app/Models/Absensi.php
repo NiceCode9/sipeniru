@@ -11,6 +11,8 @@ class Absensi extends Model
         'tanggal',
         'check_in',
         'check_out',
+        'kerapian_seragam',
+        'kelengkapan_atribut',
         'nilai_kerapian',
     ];
 
@@ -18,7 +20,7 @@ class Absensi extends Model
         'tanggal' => 'date',
         'check_in' => 'datetime',
         'check_out' => 'datetime',
-        'nilai_kerapian' => 'float'
+        'nilai_kerapian' => 'float',
     ];
 
     public function user()
