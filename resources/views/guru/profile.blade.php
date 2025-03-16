@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => 'Profil Saya'])
 
 @section('content')
     <div class="container">
@@ -32,6 +32,8 @@
                             {!! $qrCode !!}
                         </div>
                         <p class="mt-3">Gunakan QR Code ini untuk melakukan absensi</p>
+                        <a href="{{ route('guru.users.qr-code', auth()->user()->id) }}" class="btn btn-sm btn-primary"
+                            title="Download QrCode"><i class="fas fa-download"></i> Unduh</a>
                     </div>
                 </div>
             </div>

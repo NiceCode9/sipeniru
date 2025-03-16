@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => isset($user) ? 'Edit User' : 'Tambah User'])
 
 @section('title', isset($user) ? 'Edit User' : 'Tambah User')
 

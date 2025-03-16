@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => 'Scanner QR Code Absensi'])
 
 @section('content')
     <div class="row">

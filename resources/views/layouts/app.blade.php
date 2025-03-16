@@ -108,12 +108,6 @@
                                     <p>Dashboard</p>
                                 </a>
                             </li>
-                            <li class="nav-item {{ request()->is('guru.profile') ? 'active' : '' }}">
-                                <a href="{{ route('guru.profile') }}">
-                                    <i class="fas fa-user"></i>
-                                    <p>Profil</p>
-                                </a>
-                            </li>
                             <li class="nav-item {{ request()->is('guru.absensi') ? 'active' : '' }}">
                                 <a href="{{ route('guru.absensi') }}">
                                     <i class="fas fa-clock"></i>
@@ -122,7 +116,7 @@
                             </li>
                             <li class="nav-item {{ request()->is('guru.evaluasi') ? 'active' : '' }}">
                                 <a href="{{ route('guru.evaluasi') }}">
-                                    <i class="fas fa-call"></i>
+                                    <i class="fas fa-calculator"></i>
                                     <p>Evaluasi</p>
                                 </a>
                             </li>
@@ -182,7 +176,7 @@
                                     </div>
                                     <span class="profile-username">
                                         <span class="op-7">Hi,</span>
-                                        <span class="fw-bold">Hizrian</span>
+                                        <span class="fw-bold">{{ auth()->user()->name }}</span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -195,16 +189,19 @@
                                                 </div>
                                                 <div class="u-text">
                                                     <h4>Hizrian</h4>
-                                                    <p class="text-muted">hello@example.com</p>
-                                                    <a href="profile.html"
+                                                    <p class="text-muted">{{ auth()->user()->email }}</p>
+                                                    {{-- <a href="profile.html"
                                                         class="btn btn-xs btn-secondary btn-sm">View
-                                                        Profile</a>
+                                                        Profile</a> --}}
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">My Profile</a>
+                                            @if (auth()->user()->role === 'guru')
+                                                <a class="dropdown-item"
+                                                    href="{{ route('guru.profile') }}">Profile</a>
+                                            @endif
                                             <form action="{{ route('logout') }}" style="display: none;"
                                                 method="POST" id="logout-form">
                                                 @csrf
@@ -225,12 +222,12 @@
                 <div class="page-inner">
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div>
-                            <h3 class="fw-bold mb-3">Dashboard</h3>
-                            <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
+                            <h3 class="fw-bold mb-3">{{ $title }}</h3>
+                            {{-- <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6> --}}
                         </div>
                         <div class="ms-md-auto py-2 py-md-0">
-                            <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-                            <a href="#" class="btn btn-primary btn-round">Add Customer</a>
+                            {{-- <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
+                            <a href="#" class="btn btn-primary btn-round">Add Customer</a> --}}
                         </div>
                     </div>
 
