@@ -1,5 +1,14 @@
 @extends('layouts.app', ['title' => 'Riwayat Absensi'])
 
+@push('css')
+    <style>
+        .swal-custom-popup {
+            width: 800px !important;
+            max-width: 90vw;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -181,45 +190,147 @@
         //     }
         // }
 
+        // function inputNeatness(attendanceId, userId) {
+        //     // Buat dialog modal alih-alih prompt
+        //     Swal.fire({
+        //         title: 'Input Nilai Kerapian',
+        //         html: `
+    //             <div class="form-group">
+    //                 <label>Kerapian Seragam</label>
+    //                 <select id="kerapian-seragam" class="form-control">
+    //                     <option value="">Pilih Nilai</option>
+    //                     <option value="Disiplin">Disiplin</option>
+    //                     <option value="Kurang Disiplin">Kurang Disiplin</option>
+    //                     <option value="Tidak Disiplin">Tidak Disiplin</option>
+    //                 </select>
+    //             </div>
+    //             <div class="form-group mt-3">
+    //                 <label>Kelengkapan Atribut</label>
+    //                 <select id="kelengkapan-atribut" class="form-control">
+    //                     <option value="">Pilih Nilai</option>
+    //                     <option value="Lengkap">Lengkap</option>
+    //                     <option value="Kurang Lengkap">Kurang Lengkap</option>
+    //                     <option value="Tidak Lengkap">Tidak Lengkap</option>
+    //                 </select>
+    //             </div>
+    //         `,
+        //         showCancelButton: true,
+        //         confirmButtonText: 'Simpan',
+        //         cancelButtonText: 'Batal',
+        //         preConfirm: () => {
+        //             const kerapianSeragam = document.getElementById('kerapian-seragam').value;
+        //             const kelengkapanAtribut = document.getElementById('kelengkapan-atribut').value;
+
+        //             if (!kerapianSeragam || !kelengkapanAtribut) {
+        //                 Swal.showValidationMessage('Semua nilai harus diisi');
+        //                 return false;
+        //             }
+
+        //             return {
+        //                 kerapianSeragam,
+        //                 kelengkapanAtribut
+        //             };
+        //         }
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             let url = "{{ route('admin.absensi.inputKerapian') }}";
+        //             $.ajax({
+        //                 url: url,
+        //                 type: 'POST',
+        //                 data: {
+        //                     user_id: userId,
+        //                     absensi_id: attendanceId,
+        //                     kerapian_seragam: result.value.kerapianSeragam,
+        //                     kelengkapan_atribut: result.value.kelengkapanAtribut,
+        //                     _token: '{{ csrf_token() }}'
+        //                 },
+        //                 success: function(response) {
+        //                     console.log(response);
+
+        //                     document.getElementById(`kerapian-seragam-${attendanceId}`).textContent =
+        //                         result.value.kerapianSeragam;
+        //                     document.getElementById(`kelengkapan-atribut-${attendanceId}`).textContent =
+        //                         result.value.kelengkapanAtribut;
+        //                     document.getElementById(`score-${attendanceId}`).textContent = response
+        //                         .nilai_kerapian || '-';
+        //                     Swal.fire('Berhasil', 'Nilai kerapian berhasil disimpan', 'success');
+        //                 },
+        //                 error: function(xhr) {
+        //                     console.log(xhr.responseJSON);
+
+        //                     Swal.fire('Error', 'Terjadi kesalahan', 'error');
+        //                 }
+        //             });
+        //         }
+        //     });
+        // }
+
         function inputNeatness(attendanceId, userId) {
-            // Buat dialog modal alih-alih prompt
             Swal.fire({
                 title: 'Input Nilai Kerapian',
                 html: `
-                        <div class="form-group">
-                            <label>Kerapian Seragam</label>
-                            <select id="kerapian-seragam" class="form-control">
-                                <option value="">Pilih Nilai</option>
-                                <option value="Disiplin">Disiplin</option>
-                                <option value="Kurang Disiplin">Kurang Disiplin</option>
-                                <option value="Tidak Disiplin">Tidak Disiplin</option>
-                            </select>
+                    <div class="mb-3">
+                        <h5>Kerapian Seragam</h5>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="kerapian_seragam1" name="kerapian_seragam" value="baju sesuai hari">
+                            <label class="form-check-label" for="kerapian_seragam1">Seragam Sesuai Hari</label>
                         </div>
-                        <div class="form-group mt-3">
-                            <label>Kelengkapan Atribut</label>
-                            <select id="kelengkapan-atribut" class="form-control">
-                                <option value="">Pilih Nilai</option>
-                                <option value="Lengkap">Lengkap</option>
-                                <option value="Kurang Lengkap">Kurang Lengkap</option>
-                                <option value="Tidak Lengkap">Tidak Lengkap</option>
-                            </select>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="kerapian_seragam2" name="kerapian_seragam" value="baju masuk">
+                            <label class="form-check-label" for="kerapian_seragam2">Baju Dimasukkan</label>
                         </div>
-                    `,
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="kerapian_seragam3" name="kerapian_seragam" value="seragam bersih">
+                            <label class="form-check-label" for="kerapian_seragam3">Seragam Bersih</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h5>Kelengkapan Atribut</h5>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="kelengkapan_atribut1" name="kelengkapan_atribut" value="songkok/kerudung">
+                            <label class="form-check-label" for="kelengkapan_atribut1">Songkok / Kerudung</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="kelengkapan_atribut2" name="kelengkapan_atribut" value="ikat pinggang">
+                            <label class="form-check-label" for="kelengkapan_atribut2">Ikat Pinggang</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="kelengkapan_atribut3" name="kelengkapan_atribut" value="sepatu">
+                            <label class="form-check-label" for="kelengkapan_atribut3">Sepatu</label>
+                        </div>
+                    </div>
+                `,
                 showCancelButton: true,
                 confirmButtonText: 'Simpan',
                 cancelButtonText: 'Batal',
+                customClass: {
+                    popup: 'swal-custom-popup',
+                },
                 preConfirm: () => {
-                    const kerapianSeragam = document.getElementById('kerapian-seragam').value;
-                    const kelengkapanAtribut = document.getElementById('kelengkapan-atribut').value;
-
-                    if (!kerapianSeragam || !kelengkapanAtribut) {
-                        Swal.showValidationMessage('Semua nilai harus diisi');
+                    // Validasi jika tidak ada checkbox yang dipilih
+                    if ($('input[name="kerapian_seragam"]:checked').length === 0 ||
+                        $('input[name="kelengkapan_atribut"]:checked').length === 0) {
+                        Swal.showValidationMessage('Pilih minimal satu checkbox');
                         return false;
                     }
 
+                    // Mengambil nilai dari checkbox yang dipilih
+                    const kerapianSeragam = [];
+                    $('input[name="kerapian_seragam"]:checked').each(function() {
+                        kerapianSeragam.push($(this).val());
+                    });
+                    const kelengkapanAtribut = [];
+                    $('input[name="kelengkapan_atribut"]:checked').each(function() {
+                        kelengkapanAtribut.push($(this).val());
+                    });
+                    // Mengembalikan nilai sebagai objek
+                    // return {
+                    //     kerapianSeragam,
+                    //     kelengkapanAtribut
+                    // };
                     return {
                         kerapianSeragam,
-                        kelengkapanAtribut
+                        kelengkapanAtribut,
                     };
                 }
             }).then((result) => {
@@ -231,17 +342,17 @@
                         data: {
                             user_id: userId,
                             absensi_id: attendanceId,
-                            kerapian_seragam: result.value.kerapianSeragam,
-                            kelengkapan_atribut: result.value.kelengkapanAtribut,
+                            kerapian_seragam: result.value.kerapianSeragam.length,
+                            kelengkapan_atribut: result.value.kelengkapanAtribut.length,
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
                             console.log(response);
 
                             document.getElementById(`kerapian-seragam-${attendanceId}`).textContent =
-                                result.value.kerapianSeragam;
+                                response.kerapian_seragam || '-';
                             document.getElementById(`kelengkapan-atribut-${attendanceId}`).textContent =
-                                result.value.kelengkapanAtribut;
+                                response.kelengkapan_atribut || '-';
                             document.getElementById(`score-${attendanceId}`).textContent = response
                                 .nilai_kerapian || '-';
                             Swal.fire('Berhasil', 'Nilai kerapian berhasil disimpan', 'success');

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Absensi;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AbsensiController extends Controller
 {
@@ -132,13 +133,45 @@ class AbsensiController extends Controller
             ->where('id', $request->absensi_id)
             ->firstOrFail();
 
+        $kelengkapan_atribut = '';
+        switch ($request->kelengkapan_atribut) {
+            case '3':
+                $kelengkapan_atribut = 'Lengkap';
+                break;
+            case '2':
+                $kelengkapan_atribut = 'Kurang Lengkap';
+                break;
+            case '1':
+                $kelengkapan_atribut = 'Tidak Lengkap';
+                break;
+            default:
+                $kelengkapan_atribut = 'Tidak Lengkap';
+                break;
+        }
+
+        $kerapian_seragam = '';
+        switch ($request->kerapian_seragam) {
+            case '3':
+                $kerapian_seragam = 'Disiplin';
+                break;
+            case '2':
+                $kerapian_seragam = 'Kurang Disiplin';
+                break;
+            case '1':
+                $kerapian_seragam = 'Tidak Disiplin';
+                break;
+            default:
+                $kerapian_seragam = 'Tidak Disiplin';
+                break;
+        }
+
         $absensi->update([
-            'kerapian_seragam' => $request->kerapian_seragam,
-            'kelengkapan_atribut' => $request->kelengkapan_atribut,
-            'nilai_kerapian' => $this->hitungNilaiKerapian($request->kerapian_seragam, $request->kelengkapan_atribut)
+            'kerapian_seragam' => $kerapian_seragam,
+            'kelengkapan_atribut' => $kelengkapan_atribut,
+            'nilai_kerapian' => $this->hitungNilaiKerapian($kerapian_seragam, $kelengkapan_atribut)
         ]);
 
-        return response()->json(['message' => 'Nilai kerapian berhasil disimpan', 'nilai_kerapian' => $absensi->nilai_kerapian]);
+        return response()->json(['message' => 'Nilai kerapian berhasil disimpan', 'nilai_kerapian' => $absensi->nilai_kerapian, 'kelengkapan_atribut' => $kelengkapan_atribut, 'kerapian_seragam' => $kerapian_seragam]);
     }
 
     private function hitungNilaiKerapian($kerapianSeragam, $kelengkapanAtribut)
@@ -153,6 +186,7 @@ class AbsensiController extends Controller
 
     private function konversiKerapianSeragam($nilai)
     {
+        // Mengembalikan nilai numerik berdasarkan kriteria
         switch ($nilai) {
             case 'Disiplin':
                 return 10;
