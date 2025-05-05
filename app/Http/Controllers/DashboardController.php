@@ -60,14 +60,27 @@ class DashboardController extends Controller
             ->orderBy('month')
             ->get();
 
+        // $monthLabels = $monthlyData->pluck('month')->map(function ($month) {
+        //     return Carbon::createFromFormat('Y-m', $month)->format('M Y');
+        // });
         $monthLabels = $monthlyData->pluck('month')->map(function ($month) {
-            return Carbon::createFromFormat('Y-m', $month)->format('M Y');
+            return Carbon::createFromFormat('Y-m', $month)
+                ->locale('id')->translatedFormat('M Y');
         });
         $monthlyAverages = $monthlyData->pluck('average');
 
         // Top performers - separate query without grouping
         $topPerformers = (clone $query)->with('user')
+            ->selectRaw('user_id, MAX(score_akhir) as score_akhir, MAX(predikat) as predikat')
+            ->groupBy('user_id')
             ->orderBy('score_akhir', 'desc')
+            ->take(5)
+            ->get();
+
+        $bottomPerformers = (clone $query)->with('user')
+            ->selectRaw('user_id, MIN(score_akhir) as score_akhir, MIN(predikat) as predikat')
+            ->groupBy('user_id')
+            ->orderBy('score_akhir', 'asc')
             ->take(5)
             ->get();
 
@@ -80,7 +93,8 @@ class DashboardController extends Controller
             'predikatData',
             'monthLabels',
             'monthlyAverages',
-            'topPerformers'
+            'topPerformers',
+            'bottomPerformers',
         ));
     }
 
