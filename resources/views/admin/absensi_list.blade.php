@@ -121,7 +121,7 @@
                                 @foreach ($data as $absensi)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $absensi->user->name }}</td>
+                                        <td>{{ $absensi->user ? $absensi->user->name : '-' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($absensi->tanggal)->locale('ID')->isoFormat('DD MMMM YYYY') }}
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($absensi->check_in)->format('H:i:s') }}</td>
