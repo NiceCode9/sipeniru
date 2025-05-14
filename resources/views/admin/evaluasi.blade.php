@@ -122,7 +122,7 @@
                             <tbody>
                                 @foreach ($evaluations as $evaluation)
                                     <tr>
-                                        <td>{{ $evaluation->user->name }}</td>
+                                        <td>{{ $evaluation->user ? $evaluation->user->name : '-' }}</td>
                                         <td>{{ \Carbon\Carbon::parse($evaluation->start_date)->locale('id')->isoFormat('DD MMMM YYYY') }}
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($evaluation->end_date)->locale('id')->isoFormat('DD MMMM YYYY') }}

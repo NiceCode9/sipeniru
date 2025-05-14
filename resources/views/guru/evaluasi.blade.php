@@ -8,7 +8,7 @@
                 <div class="card bg-primary text-white">
                     <div class="card-body text-center">
                         <h6>Rata-rata Kehadiran</h6>
-                        <h3>{{ number_format($averages->avg_absensi, 2) }}%</h3>
+                        <h3>{{ $averages->avg_absensi ? number_format($averages->avg_absensi, 2) : 0 }}%</h3>
                     </div>
                 </div>
             </div>
@@ -16,7 +16,7 @@
                 <div class="card bg-success text-white">
                     <div class="card-body text-center">
                         <h6>Rata-rata Kerapian</h6>
-                        <h3>{{ number_format($averages->avg_kerapian, 2) }}</h3>
+                        <h3>{{ $averages->avg_kerapian ? number_format($averages->avg_kerapian, 2) : 0 }}</h3>
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                 <div class="card bg-info text-white">
                     <div class="card-body text-center">
                         <h6>Rata-rata Nilai Akhir</h6>
-                        <h3>{{ number_format($averages->avg_score, 2) }}</h3>
+                        <h3>{{ $averages->avg_score ? number_format($averages->avg_score, 2) : 0 }}</h3>
                     </div>
                 </div>
             </div>
