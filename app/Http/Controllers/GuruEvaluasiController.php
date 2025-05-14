@@ -28,6 +28,14 @@ class GuruEvaluasiController extends Controller
             AVG(score_akhir) as avg_score
         ')->first();
 
+        if (!$averages) {
+            $averages = (object)[
+                'avg_absensi' => 0,
+                'avg_kerapian' => 0,
+                'avg_score' => 0,
+            ];
+        }
+
         return view('guru.evaluasi', compact('evaluations', 'averages'));
     }
 }
