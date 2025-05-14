@@ -19,10 +19,13 @@ class GuruEvaluasiController extends Controller
             ]);
         }
 
+        // Clone the query for statistics before adding ordering/pagination
+        $statsQuery = (clone $query);
+
         $evaluations = $query->latest()->paginate(10);
 
         // Statistik evaluasi
-        $averages = $query->selectRaw('
+        $averages = $statsQuery->selectRaw('
             AVG(presentasi_absensi) as avg_absensi,
             AVG(score_kerapian) as avg_kerapian,
             AVG(score_akhir) as avg_score
