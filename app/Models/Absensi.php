@@ -14,6 +14,7 @@ class Absensi extends Model
         'kerapian_seragam',
         'kelengkapan_atribut',
         'nilai_kerapian',
+        'path',
     ];
 
     protected $casts = [

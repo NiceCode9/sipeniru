@@ -141,6 +141,13 @@
                                             @else
                                                 <span class="badge badge-secondary">Belum Absen Keluar</span>
                                             @endif
+                                            @if ($absensi->path)
+                                                <button type="button" class="btn btn-info btn-sm btn-show-foto"
+                                                    data-bs-toggle="modal" data-bs-target="#fotoModal"
+                                                    data-foto="{{ asset('storage/' . $absensi->path) }}">
+                                                    <i class="fa fa-image"></i> Lihat Foto
+                                                </button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -152,6 +159,22 @@
                             {{ $data->links() }}
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Foto -->
+    <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fotoModalLabel">Foto Attribut</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" id="fotoAttributImg" alt="Foto Attribut" class="img-fluid"
+                        style="max-height:400px;">
                 </div>
             </div>
         </div>
@@ -366,5 +389,11 @@
                 }
             });
         }
+
+        // Menampilkan foto di modal
+        $(document).on('click', '.btn-show-foto', function() {
+            const foto = $(this).data('foto');
+            $('#foto-bukti').attr('src', foto);
+        });
     </script>
 @endpush

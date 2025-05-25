@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
         Route::get('/profile', [GuruProfileController::class, 'index'])->name('profile');
         Route::get('/absensi', [GuruAbsensiController::class, 'index'])->name('absensi');
+        Route::post('/absensi/{id}/upload-foto', [GuruAbsensiController::class, 'uploadFotoAttribut'])->name('absensi.uploadFoto');
+        Route::post('/absensi/{id}/hapus-foto', [GuruAbsensiController::class, 'hapusFotoAttribut'])->name('absensi.hapusFoto');
         Route::get('/evaluasi', [GuruEvaluasiController::class, 'index'])->name('evaluasi');
         Route::get('/users/{id}/qr-code', [UserController::class, 'downloadQrCode'])->name('users.qr-code');
     });
